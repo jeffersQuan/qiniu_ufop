@@ -502,7 +502,7 @@ function overlay_video($src_name, $overlay_type)
     $ffmpeg = find_ffmpeg();
 
     if ($ffmpeg && isVideoExists($src_name)) {
-        $cmd = "$ffmpeg -y -loglevel error -i temp/$src_name -i video/overlay/$overlay_type.mov [0:0]scale=iw:ih[a];[1:0]scale=540:960[b];[a][b]overlay=0:0:shortest=1 -pix_fmt yuv420p temp/$target_name";
+        $cmd = "$ffmpeg -y -loglevel error -i temp/$src_name -i video/overlay/$overlay_type.mov -filter_complex '[0:0]scale=540:960[a];[1:0]scale=540:960[b];[a][b]overlay=0:0:shortest=1' -pix_fmt yuv420p temp/$target_name";
         $res = exec_cmd_custom($cmd);
 
         if ($res) {

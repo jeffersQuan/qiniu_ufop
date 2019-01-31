@@ -159,7 +159,7 @@ function task_before_filter() {
             $filter_type = $segment_json->filterType;
         }
         if (property_exists($segment_json, 'overlayType')) {
-            $filter_type = $segment_json->overlayType;
+            $overlay_type = $segment_json->overlayType;
         }
         $script_src_url = fix_src_url($segment_json->src);
         $src_name = $cmds[4];
@@ -357,12 +357,7 @@ if ($request_url == 'health') {
                 $res = filter_video($res, $filter_type, $src_type);
             }
         } else {
-            $res = overlay_video($file_name, $overlay_type);
-
-            if ($res) {
-                $res = filter_video($res, $filter_type, $src_type);
-            }
-
+            $res = filter_video($file_name, $filter_type, $src_type);
         }
 
         if ($res) {
@@ -375,6 +370,11 @@ if ($request_url == 'health') {
                 $t = $duration;
                 $rotate = false;
                 $res = image_to_video($res, $duration);
+
+                //添加覆盖效果
+                if ($overlay_type && $res) {
+                    $res = overlay_video($res, $overlay_type);
+                }
             }
 
             //需要把横屏视频处理成竖屏
